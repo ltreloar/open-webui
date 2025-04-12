@@ -17,7 +17,8 @@ services:
     image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
     container_name: open-webui
     volumes:
-      - open-webui:/app/backend/data
+      - ./backend/data:/app/backend/data   # explicit local volume mapping
+      - ./.env:/app/backend/.env           # explicitly persisting .env file
     depends_on:
       - ollama
     ports:
@@ -25,10 +26,10 @@ services:
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
       - 'WEBUI_SECRET_KEY='
+      - 'DATA_DIR=/app/backend/data'       # explicitly setting DATA_DIR
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
 
 volumes:
   ollama: {}
-  open-webui: {}
